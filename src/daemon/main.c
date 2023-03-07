@@ -3,22 +3,19 @@
 #include <stdio.h>
 
 int main(int argc, char **argv){
-    
-    //TODO: Save the processes names in other place
-    const char *pname = "onenote.exe";
     int pid, active;
+
+    // Daemon loop; TODO: Create forks for each program to monitor
     while(1){        
-        pid = get_process_list(pname);
+        
+        // Get process ID
+        pid = get_process_list(programs[0]);
 
+        // If the process was found
         if(pid > 0){
-            printf("Process Name: %s\n", pname);
-            printf("Process ID: %d\n", pid);
-            active = is_active_page(pid);
-
-            // Verify if the active is window 
-            if(active == 0)
-                printf("%d\n", active);
+            active = is_active_window(pid);
         }
+
         sleep(30);
     }
 

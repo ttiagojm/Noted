@@ -7,6 +7,6 @@
 #include <unistd.h>
 
 int get_process_list(const char *pname);
-int is_active_page(int pid);
+int is_active_window(int pid);
 
 #endif

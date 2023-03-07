@@ -47,7 +47,7 @@ int get_process_list(const char *pname){
     return -1;
 }
 
-int is_active_page(int pid){
+int is_active_window(int pid){
 
     HWND foreground_window;
     long unsigned int fore_pid = -1;
