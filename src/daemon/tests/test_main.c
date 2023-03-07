@@ -19,12 +19,12 @@ int test_find_pid(){
     for(i = 0; i < size; i++){
         memset(cmd, 0, 50);
 
-        sprintf(cmd, "start %s", programs[i]);   
+        sprintf(cmd, "start %s", programs[i].name);   
         system(cmd);
         sleep(5);
 
         // Check if the process exists
-        pid = get_process_list(programs[i]);
+        pid = get_process_list(programs[i].name);
         assert(pid > 0);
 
         // Kill program
@@ -34,7 +34,7 @@ int test_find_pid(){
         sleep(5);
 
          // Check if the process exists
-        pid = get_process_list(programs[i]);
+        pid = get_process_list(programs[i].name);
         assert(pid == -1);
     }
 
@@ -49,13 +49,13 @@ int test_is_active_window(){
 
     for(int i = 0; i < size; i++){
         memset(cmd, 0, 50);
-        sprintf(cmd, "start %s", programs[i]);
+        sprintf(cmd, "start %s", programs[i].name);
         system(cmd);
         memset(cmd, 0, 50);
 
         sleep(5);
 
-        pid = get_process_list(programs[i]);
+        pid = get_process_list(programs[i].name);
 
         ret = is_active_window(pid);
 

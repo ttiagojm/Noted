@@ -3,17 +3,17 @@
 #include <stdio.h>
 
 int main(int argc, char **argv){
-    int pid, active;
+    int active;
 
     // Daemon loop; TODO: Create forks for each program to monitor
     while(1){        
         
         // Get process ID
-        pid = get_process_list(programs[0]);
+        programs[0].pid = get_process_list(programs[0].name);
 
         // If the process was found
-        if(pid > 0){
-            active = is_active_window(pid);
+        if(programs[0].pid > 0){
+            active = is_active_window(programs[0].pid);
         }
 
         sleep(30);

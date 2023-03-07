@@ -33,7 +33,5 @@ $(EXECNAME): $(OBJ)
 make_test: $(OBJTEST)
 	$(CC) -o $@ $^ $(CFLAGS)
 
-
-.PHONY: clean
 clean:
 	$(RM) -f *.o tests$(DELIM)*.o
