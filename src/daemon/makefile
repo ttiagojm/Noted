@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-I./includes
-DEPS=daemon.h auth.h config.h
+DEPS=daemon.h auth.h
 OBJ=main.o daemon.o auth.o
 OBJTEST=tests/test_main.o daemon.o auth.o
 RM=rm

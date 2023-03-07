@@ -1,5 +1,6 @@
 #include "daemon.h"
 
+
 int get_process_list(const char *pname){
     /*
         Function constructed from: https://learn.microsoft.com/en-us/windows/win32/toolhelp/taking-a-snapshot-and-viewing-processes
@@ -59,4 +60,15 @@ int is_active_window(int pid){
         return -1;
     
     return 0;
+}
+
+void update_timer(counter_t *counter){
+    time_t tmp = time(NULL);
+    counter->cur_time += counter->prev_time == 0 ? 0:tmp - counter->prev_time;
+    counter->prev_time = tmp;
+}
+
+void clear_timer(counter_t *counter){
+    counter->prev_time = 0;
+    counter->cur_time = 0;
 }

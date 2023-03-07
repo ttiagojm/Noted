@@ -1,5 +1,4 @@
 #include "daemon.h"
-#include "config.h"
 #include <stdio.h>
 
 int main(int argc, char **argv){
@@ -11,12 +10,17 @@ int main(int argc, char **argv){
         // Get process ID
         programs[0].pid = get_process_list(programs[0].name);
 
-        // If the process was found
-        if(programs[0].pid > 0){
-            active = is_active_window(programs[0].pid);
+        // If the process was found and the window is active: Count
+        if(programs[0].pid > 0 && is_active_window(programs[0].pid) == 0){
+            update_timer(&programs[0].timer);
+            printf("%ld\n", programs[0].timer.cur_time);
         }
-
-        sleep(30);
+        else{
+            printf("[!] Cleaning...");
+            clear_timer(&programs[0].timer);
+        }
+        
+        sleep(SLEEP_TIME);
     }
 
     return 0;
