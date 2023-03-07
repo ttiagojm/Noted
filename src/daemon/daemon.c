@@ -46,3 +46,17 @@ int get_process_list(const char *pname){
 
     return -1;
 }
+
+int is_active_page(int pid){
+
+    HWND foreground_window;
+    long unsigned int fore_pid = -1;
+
+    foreground_window = GetForegroundWindow();
+    GetWindowThreadProcessId(foreground_window, &fore_pid);
+
+    if(pid != fore_pid)
+        return -1;
+    
+    return 0;
+}
