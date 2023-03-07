@@ -4,7 +4,6 @@
 #include <windows.h>
 #include <tlhelp32.h>
 #include <tchar.h>
-#include <string.h>
 
 int get_process_list(const char *pname);
 
