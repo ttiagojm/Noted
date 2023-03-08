@@ -52,6 +52,29 @@ app.post('/programs', async (request, reply) =>{
     })
 })
 
+app.get('/statistics', async () =>{
+    const stat = await prisma.Statistics.findMany();
+
+    return {stat}
+})
+
+app.post('/statistics', async (request, reply) =>{
+    const schemaStat = z.object({
+        UserId: z.string(),
+        ProgramId: z.string(),
+        time:      z.number()
+    })
+    const {UserId, ProgramId, time} = schemaStat.parse(request.body);
+
+    await prisma.Statistics.create({
+        data:{
+            UserId,
+            ProgramId,
+            time
+        }
+    })
+})
+
 // Both ports set to 3333
 app.listen({
     port: process.env.PORT ? Number(process.env.PORT) : 3333 

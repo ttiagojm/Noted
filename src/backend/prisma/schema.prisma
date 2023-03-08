@@ -32,5 +32,6 @@ model Statistics {
   UserId    String
   Program   program  @relation(fields: [ProgramId], references: [id])
   ProgramId String
+  time      Int
   CreatedAt DateTime @default(now())
 }
