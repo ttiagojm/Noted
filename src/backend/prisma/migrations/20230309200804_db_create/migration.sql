@@ -23,6 +23,7 @@ CREATE TABLE "Statistics" (
     "id" TEXT NOT NULL,
     "UserId" TEXT NOT NULL,
     "ProgramId" TEXT NOT NULL,
+    "time" INTEGER NOT NULL,
     "CreatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Statistics_pkey" PRIMARY KEY ("id")
