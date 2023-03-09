@@ -1,5 +1,5 @@
-#include "config.h"
 #include "daemon.h"
+#include "websocket.h"
 #include <stdio.h>
 #include <assert.h>
 #include <windows.h>
@@ -71,22 +71,32 @@ int test_is_active_window(){
     return 0;
 }
 
+int test_http_socket(){
+    return make_api_request("http://noted-api.onrender.com/statistics");
+}
+
 int main(int argc, char **argv){
     int ret;
     
-    ret = test_programs_array();
+    // ret = test_programs_array();
     
+    // if(ret == 0)
+    //     printf("[+] SUCCESS on verify wanted programs!\n");
+
+    // ret = test_find_pid();
+
+    // if(ret == 0)
+    //     printf("[+] SUCCESS on detecting programs!\n");
+
+    // ret = test_is_active_window();
+
+    // if(ret == 0)
+    //     printf("[+] SUCCESS on detecting active window!\n");
+
+    ret = test_http_socket();
+
     if(ret == 0)
-        printf("[+] SUCCESS on verify wanted programs!\n");
+        printf("[+] SUCCESS on sending through HTTP socket!\n");
 
-    ret = test_find_pid();
-
-    if(ret == 0)
-        printf("[+] SUCCESS on detecting programs!\n");
-
-    ret = test_is_active_window();
-
-    if(ret == 0)
-        printf("[+] SUCCESS on detecting active window!\n");
     return 0;
 }

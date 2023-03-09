@@ -1,16 +1,18 @@
 CC=gcc
-CFLAGS=-I./includes
-DEPS=daemon.h auth.h
-OBJ=main.o daemon.o auth.o
-OBJTEST=tests/test_main.o daemon.o auth.o
-RM=rm
-EXECNAME=noted
 DELIM=/
+RM=rm
+
 # rm and / path delimiter don't work on Windows
 ifeq ($(OS), Windows_NT)
 	RM=del
 	DELIM=$(strip \)
 endif
+
+CFLAGS=-I./includes -I./curl/include -L./curl/lib  -lcurl
+DEPS=daemon.h auth.h websocket.h
+OBJ=main.o daemon.o auth.o websocket.o
+OBJTEST=tests/test_main.o daemon.o auth.o websocket.o
+EXECNAME=noted
 
 
 all: $(EXECNAME) clean
