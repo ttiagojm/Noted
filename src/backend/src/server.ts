@@ -53,7 +53,7 @@ app.post('/programs', async (request, reply) =>{
 })
 
 app.get('/statistics', async () =>{
-    const stat = await prisma.Statistics.findMany();
+    const stat = await prisma.statistics.findMany();
 
     return {stat}
 })
@@ -66,7 +66,7 @@ app.post('/statistics', async (request, reply) =>{
     })
     const {UserId, ProgramId, time} = schemaStat.parse(request.body);
 
-    await prisma.Statistics.create({
+    await prisma.statistics.create({
         data:{
             UserId,
             ProgramId,
