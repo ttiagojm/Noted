@@ -81,7 +81,6 @@ app.post('/statistics', async (request, reply) =>{
     await prisma.statistics.upsert({
         where: {
             UserId_ProgramId: {UserId, ProgramId}
-
         },
         update: {
           time: {
@@ -96,6 +95,22 @@ app.post('/statistics', async (request, reply) =>{
     })
 
     return reply.status(201).send();
+})
+
+app.delete('/statistics', async (request, reply) =>{
+    const schemaStat = z.object({
+        UserId: z.string(),
+        ProgramId: z.string(),
+    })
+    const {UserId, ProgramId} = schemaStat.parse(request.body);
+
+    await prisma.statistics.delete({
+        where: {
+            UserId_ProgramId: {UserId, ProgramId}
+        }
+    })
+
+    return reply.status(202).send();
 })
 
 // Both ports set to 3333
