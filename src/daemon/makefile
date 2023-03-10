@@ -8,7 +8,8 @@ ifeq ($(OS), Windows_NT)
 	DELIM=$(strip \)
 endif
 
-CFLAGS=-I./includes -I./curl/include -L./curl/lib  -lcurl
+CURLPATH=./curl/
+CFLAGS=-I./includes -I$(CURLPATH)include -L$(CURLPATH)lib  -lcurl
 DEPS=daemon.h auth.h websocket.h
 OBJ=main.o daemon.o auth.o websocket.o
 OBJTEST=tests/test_main.o daemon.o auth.o websocket.o

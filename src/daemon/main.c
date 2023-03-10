@@ -2,6 +2,14 @@
 #include <stdio.h>
 
 int main(int argc, char **argv){
+
+    if(argc == 1){
+        printf("[!] Forgot to pass the cacert path\n");
+        return 1;
+    }
+
+    printf("%s\n", argv[1]);
+
     int active;
 
     // Daemon loop; TODO: Create forks for each program to monitor
