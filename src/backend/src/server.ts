@@ -1,6 +1,7 @@
 import { fastify } from "fastify";
 import { PrismaClient } from "@prisma/client";
-import {z} from "zod";
+import {string, z} from "zod";
+import {hashPassword, comparePassword} from "./security/passwordHash"
 
 const app = fastify();
 
@@ -26,11 +27,28 @@ app.post('/users', async (request, reply) =>{
         data:{
             name,
             email,
-            password
+            password: await hashPassword(password)
         }
     })
 
     return reply.status(201).send();
+})
+// TODO RE-DO this route
+app.delete('/users', async (request, reply) =>{
+    const schemaStat = z.object({
+        id: z.string(),
+        email: z.string().email(),
+        password: z.string(),
+    })
+    const {id,email, password} = schemaStat.parse(request.body);
+
+    await prisma.user.delete({
+        where: {
+            id: id
+        }
+    })
+
+    return reply.status(202).send();
 })
 
 app.get('/programs', async () =>{
@@ -66,18 +84,6 @@ app.post('/statistics', async (request, reply) =>{
     })
     const {UserId, ProgramId, time} = schemaStat.parse(request.body);
 
-    /*const a = await prisma.statistics.findUnique({
-        where:{
-            UserId_ProgramId: {UserId, ProgramId}
-        },
-        select: {
-            time: true
-        }
-    })
-
-    console.log(a);*/
-
-
     await prisma.statistics.upsert({
         where: {
             UserId_ProgramId: {UserId, ProgramId}
@@ -112,7 +118,6 @@ app.delete('/statistics', async (request, reply) =>{
 
     return reply.status(202).send();
 })
-
 // Both ports set to 3333
 app.listen({
     port: process.env.PORT ? Number(process.env.PORT) : 3333 

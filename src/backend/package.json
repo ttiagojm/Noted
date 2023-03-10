@@ -11,12 +11,16 @@
     "build": "tsup src",
     "start": "node dist/server.js"
   },
+  "prisma": {
+    "seed": "ts-node src/prisma/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^18.14.6",
+    "@types/node": "^18.15.0",
     "prisma": "^4.11.0",
+    "ts-node": "^10.9.1",
     "tsup": "^6.6.3",
     "tsx": "^3.12.3",
     "typescript": "^4.9.5"
