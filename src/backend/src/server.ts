@@ -66,13 +66,36 @@ app.post('/statistics', async (request, reply) =>{
     })
     const {UserId, ProgramId, time} = schemaStat.parse(request.body);
 
-    await prisma.statistics.create({
-        data:{
-            UserId,
-            ProgramId,
-            time
+    /*const a = await prisma.statistics.findUnique({
+        where:{
+            UserId_ProgramId: {UserId, ProgramId}
+        },
+        select: {
+            time: true
         }
     })
+
+    console.log(a);*/
+
+
+    await prisma.statistics.upsert({
+        where: {
+            UserId_ProgramId: {UserId, ProgramId}
+
+        },
+        update: {
+          time: {
+            increment: time,
+          },
+        },
+        create: {
+          UserId: UserId,
+          ProgramId: ProgramId,
+          time: time
+        },
+    })
+
+    return reply.status(201).send();
 })
 
 // Both ports set to 3333

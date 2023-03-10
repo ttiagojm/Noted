@@ -34,4 +34,6 @@ model Statistics {
   ProgramId String
   time      Int
   CreatedAt DateTime @default(now())
+
+  @@unique([UserId, ProgramId])
 }
