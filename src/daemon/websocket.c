@@ -35,6 +35,8 @@ int make_api_request(const char *url, const char* path_cacert){
     CURL *curl;
     CURLcode res;
     struct MemoryStruct chunk;
+    long code;
+    const char* body = "{\"UserId\":\"teste\",\"ProgramId\":\"clf2odfew0000vh1wixalezvr\",\"time\":60}";
 
     // Allocate some memory for then re-allocate it to the right size
     chunk.memory = malloc(1);
@@ -55,7 +57,7 @@ int make_api_request(const char *url, const char* path_cacert){
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYSTATUS, 1);  
         curl_easy_setopt(curl, CURLOPT_CAINFO, path_cacert);
-    	curl_easy_setopt(curl, CURLOPT_CAPATH, path_cacert);
+    	  curl_easy_setopt(curl, CURLOPT_CAPATH, path_cacert);
 
         // Function that writes the HTTP response 
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
@@ -65,9 +67,8 @@ int make_api_request(const char *url, const char* path_cacert){
         curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
 
         // Body parameters
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS,
-        "{\"UserId\":\"10b37ecb-4890-42d3-acb3-1d9a6c5db33b\",\"ProgramId\":\"clf02j3pj0eeeokpkg69coS09\",\"time\":60}");
-
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strlen(body));
 
         // Response code from cURL (0 = CURLE_OK)
         res = curl_easy_perform(curl);
@@ -75,6 +76,13 @@ int make_api_request(const char *url, const char* path_cacert){
         if(res != CURLE_OK)
             fprintf(stderr, "curl_easy_perform() failed: %s\n",
                     curl_easy_strerror(res));
+        else{
+          // Since the request was made successfully, let's check the HTTP Error
+          curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &code);
+          
+          if(code/100 == 4 || code/100 == 5)
+            fprintf(stderr, "Failed request! %s:\n", chunk);
+        }
     }
 
     // Clean Heap and cURL
@@ -86,6 +94,5 @@ int make_api_request(const char *url, const char* path_cacert){
 
     curl_global_cleanup();
 
-    return 0;
-
+    return 0;W
 }
