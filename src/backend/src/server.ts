@@ -1,7 +1,9 @@
 import { fastify } from "fastify";
 import { PrismaClient } from "@prisma/client";
-import {string, z} from "zod";
+import {z} from "zod";
 import {hashPassword, comparePassword} from "./security/passwordHash"
+import jwt from "jsonwebtoken";
+import { verifyToken } from "./middleware/auth";
 
 const app = fastify();
 
@@ -22,7 +24,6 @@ app.post('/users', async (request, reply) =>{
     })
     const {name, email, password} = schemaUser.parse(request.body);
 
-    // TODO hash password
     await prisma.user.create({
         data:{
             name,
@@ -49,6 +50,40 @@ app.delete('/users', async (request, reply) =>{
     })
 
     return reply.status(202).send();
+})
+
+app.post('/login', async (request, reply) =>{
+    const schemaUser = z.object({
+        email: z.string().email(),
+        password: z.string(),
+    })
+    try {
+                    
+        const {email, password} = schemaUser.parse(request.body)
+
+
+
+        const user = await prisma.user.findFirstOrThrow({
+            where: {
+                email
+            }
+        })
+
+        if(!await comparePassword(password, user.password)){
+            return reply.code(400).send({error: "Password incorrect"})
+        }
+        
+        const token = jwt.sign(
+            { user_id: user.id, email },
+            process.env.TOKEN_KEY,
+            {expiresIn: "365d"}
+        )
+
+        return reply.status(200).send({token})
+    } catch (error) {
+        return reply.code(400).send(error)
+    }
+
 })
 
 app.get('/programs', async () =>{
@@ -79,28 +114,44 @@ app.get('/statistics', async () =>{
 app.post('/statistics', async (request, reply) =>{
     const schemaStat = z.object({
         UserId: z.string(),
-        ProgramId: z.string(),
+        ProgramName: z.string(),
         time:      z.number()
     })
-    const {UserId, ProgramId, time} = schemaStat.parse(request.body);
 
-    await prisma.statistics.upsert({
-        where: {
-            UserId_ProgramId: {UserId, ProgramId}
-        },
-        update: {
-          time: {
-            increment: time,
-          },
-        },
-        create: {
-          UserId: UserId,
-          ProgramId: ProgramId,
-          time: time
-        },
-    })
+    try {
+        const {UserId, ProgramName, time} = schemaStat.parse(request.body);
 
-    return reply.status(201).send();
+        verifyToken(request, reply)
+
+        const { id } = await prisma.program.findUnique({
+            select: {
+                id: true
+            },
+            where: {
+                ProgramName: ProgramName.toLocaleLowerCase()
+            }
+        })
+        await prisma.statistics.upsert({
+            where: {
+                UserId_ProgramId: {UserId, ProgramId: id}
+            },
+            update: {
+            time: {
+                increment: time,
+            },
+            },
+            create: {
+                UserId: UserId,
+                ProgramId: id,
+                time: time
+            },
+        })
+
+        return reply.status(201).send();
+    } catch (error) {
+        return reply.status(400).send({error: "Something went wrong"});
+    }
+    
 })
 
 app.delete('/statistics', async (request, reply) =>{

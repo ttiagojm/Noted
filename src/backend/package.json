@@ -18,6 +18,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.1",
     "@types/node": "^18.15.0",
     "prisma": "^4.11.0",
     "ts-node": "^10.9.1",
@@ -30,6 +31,7 @@
     "@types/bcrypt": "^5.0.0",
     "bcrypt": "^5.1.0",
     "fastify": "^4.14.1",
+    "jsonwebtoken": "^9.0.0",
     "zod": "^3.21.4"
   }
 }
